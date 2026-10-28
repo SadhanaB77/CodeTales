@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Quiz | CodeTales</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            background: #f8f7ff;
+            color: #292344;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 25px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #5635a5;
+            font-size: 30px;
+        }
+
+        .header p {
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .question-number {
+            color: #6842c2;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.6;
+            margin: 12px 0 18px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 13px 15px;
+            margin: 10px 0;
+            border: 1px solid #e7e0f3;
+            border-radius: 9px;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .option:hover {
+            background: #f8f5ff;
+            border-color: #9575e8;
+        }
+
+        .option input {
+            margin-top: 4px;
+            accent-color: #6842c2;
+        }
+
+        .submit-btn,
+        .back-btn {
+            display: inline-block;
+            border: none;
+            padding: 14px 23px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: #6842c2;
+            color: white;
+            width: 100%;
+        }
+
+        .back-btn {
+            background: #eee8fa;
+            color: #5635a5;
+            margin-top: 15px;
+        }
+
+        .submit-btn:hover,
+        .back-btn:hover {
+            opacity: 0.88;
+        }
+
+        .result {
+            text-align: center;
+            background: white;
+            padding: 28px;
+            margin-bottom: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .score {
+            font-size: 35px;
+            font-weight: bold;
+            color: #6842c2;
+            margin: 15px 0;
+        }
+
+        .correct {
+            color: #218838;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .explanation {
+            background: #f5f2fb;
+            border-left: 4px solid #9575e8;
+            padding: 12px;
+            margin-top: 14px;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+
+        .error {
+            background: #fff0f0;
+            color: #b42318;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>🧠 Story-Based Quiz</h1>
+        <p>
+            Test your understanding of Python through questions
+            based on your generated CodeTale.
+        </p>
+    </div>
+
+    {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {% if quiz_results is defined %}
+
+        <!-- QUIZ RESULT -->
+
+        <div class="result">
+
+            <h2>🎉 Quiz Completed!</h2>
+
+            <p>Your Score</p>
+
+            <div class="score">
+                {{ quiz_score }} / {{ questions|length }}
+            </div>
+
+            <p>
+                {% if quiz_score == questions|length %}
+                    Excellent! You answered every question correctly!
+                {% elif quiz_score >= 3 %}
+                    Good job! Keep practising.
+                {% else %}
+                    Keep learning! You can improve with practice.
+                {% endif %}
+            </p>
+
+        </div>
+
+        <!-- ANSWER REVIEW -->
+
+        {% for question in questions %}
+
+            {% set result = quiz_results[loop.index0] %}
+
+            <div class="card">
+
+                <div class="question-number">
+                    QUESTION {{ loop.index }}
+                </div>
+
+                <div class="question">
+                    {{ question.question }}
+                </div>
+
+                {% for option in question.options %}
+
+                    <div class="option">
+
+                        {% if loop.index0 == result.correct %}
+                            <span class="correct">✓</span>
+                        {% elif loop.index0 == result.selected %}
+                            <span class="incorrect">✗</span>
+                        {% endif %}
+
+                        <span>{{ option }}</span>
+
+                    </div>
+
+                {% endfor %}
+
+                {% if result.is_correct %}
+
+                    <p class="correct">Your answer is correct!</p>
+
+                {% else %}
+
+                    <p class="incorrect">Your answer is incorrect.</p>
+
+                    <p>
+                        Correct answer:
+                        <strong>{{ question.options[result.correct] }}</strong>
+                    </p>
+
+                {% endif %}
+
+                {% if result.explanation %}
+                    <div class="explanation">
+                        <strong>Explanation:</strong>
+                        {{ result.explanation }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+        <div class="actions">
+
+            <a href="{{ url_for('dashboard') }}" class="back-btn">
+                ← Back to Dashboard
+            </a>
+
+            <a href="{{ url_for('new_story') }}" class="back-btn">
+                Create Another Story
+            </a>
+
+        </div>
+
+    {% elif questions %}
+
+        <!-- QUIZ QUESTIONS -->
+
+        <form action="{{ url_for('check_quiz') }}" method="POST">
+
+            {% for question in questions %}
+
+                <div class="card">
+
+                    <div class="question-number">
+                        QUESTION {{ loop.index }} OF {{ questions|length }}
+                    </div>
+
+                    <div class="question">
+                        {{ question.question }}
+                    </div>
+
+                    {% for option in question.options %}
+
+                        <label class="option">
+
+                            <input
+                                type="radio"
+                                name="answer_{{ loop.index0 }}"
+                                value="{{ loop.index0 }}"
+                                required
+                            >
+
+                            <span>{{ option }}</span>
+
+                        </label>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endfor %}
+
+            <button type="submit" class="submit-btn">
+                Submit Quiz →
+            </button>
+
+        </form>
+
+        <div class="actions">
+            <a href="{{ url_for('dashboard') }}" class="back-btn">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+    {% else %}
+
+        <!-- NO QUESTIONS -->
+
+        <div class="card" style="text-align:center;">
+
+            <h2>No Quiz Questions Available</h2>
+
+            <p>
+                We couldn't generate your quiz.
+                Please try again using a generated story.
+            </p>
+
+            <a href="{{ url_for('new_story') }}" class="back-btn">
+                Generate a Story →
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

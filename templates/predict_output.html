@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Output | CodeTales</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f7ff;
+            color: #292344;
+            margin: 0;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6842c2;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #6842c2;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #9575e8;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #5635a5;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            margin: 25px 0;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: #6842c2;
+            margin-top: 0;
+            margin-bottom: 18px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 220px;
+            padding: 15px;
+            border: 1px solid #d8d0eb;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            resize: vertical;
+            outline-color: #6842c2;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 13px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #6842c2;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .button:hover {
+            background: #4e2c9c;
+        }
+
+        .output {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            line-height: 1.8;
+            background: #f3f0fa;
+            padding: 20px;
+            border-radius: 8px;
+            color: #39334f;
+            font-size: 15px;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 18px;
+        }
+
+        .note {
+            color: #777;
+            font-size: 13px;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 16px 5%;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .nav-links {
+                gap: 12px;
+                font-size: 13px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 12px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">📖 CodeTales</div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('new_story') }}">Generate Story</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <h1>💻 Predict the Output</h1>
+
+        <p class="subtitle">
+            Enter your Python program and understand its expected output
+            through a simple explanation.
+        </p>
+
+        <div class="card">
+
+            <h2>Enter Your Python Code</h2>
+
+            <form method="POST" action="{{ url_for('predict_output') }}">
+
+                <textarea
+                    name="code"
+                    placeholder="Example:
+a = 10
+b = 20
+print(a + b)"
+                    required
+                >{{ code }}</textarea>
+
+                <button type="submit" class="button">
+                    Predict Output ✨
+                </button>
+
+            </form>
+
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+        </div>
+
+        {% if prediction %}
+
+        <div class="card">
+
+            <h2>📝 Predicted Output and Explanation</h2>
+
+            <div class="output">{{ prediction }}</div>
+
+            <p class="note">
+                Note: This is an AI-generated prediction.
+                Your submitted Python code is not executed by the application.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+        <a href="{{ url_for('dashboard') }}" class="button">
+            ← Back to Dashboard
+        </a>
+
+    </main>
+
+    <footer>
+        © 2026 CodeTales | Learn, Predict & Play
+    </footer>
+
+</body>
+</html>

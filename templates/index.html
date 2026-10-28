@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Story | CodeTales</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f7ff;
+            color: #292344;
+        }
+
+        nav {
+            background: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .logo {
+            color: #6842c2;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #6842c2;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #9575e8;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 55px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5635a5;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 280px;
+            padding: 16px;
+            border: 1px solid #d8cdef;
+            border-radius: 9px;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            resize: vertical;
+            outline-color: #6842c2;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d8cdef;
+            border-radius: 8px;
+            margin-bottom: 22px;
+            font-size: 15px;
+            background: white;
+            color: #292344;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #6842c2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4e2c9c;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #a32121;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 18px 5%;
+            }
+
+            .container {
+                margin: 25px auto;
+                padding: 15px;
+            }
+
+            .form-box {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .nav-links {
+                gap: 12px;
+                font-size: 13px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">📖 CodeTales</div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('predict_output') }}">Predict Output</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <h1>Turn Your Code into a Story!</h1>
+
+        <p class="subtitle">
+            Enter your Python code and discover its logic
+            through simple stories.
+        </p>
+
+        <div class="form-box">
+
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <form action="{{ url_for('generate') }}" method="POST">
+
+                <label for="code">Enter Your Python Code</label>
+
+                <textarea
+                    id="code"
+                    name="code"
+                    placeholder="Example:
+name = input('Enter your name: ')
+print('Hello', name)"
+                    required
+                ></textarea>
+
+                <br><br>
+
+                <label for="language">Choose Explanation Language</label>
+
+                <select name="language" id="language" required>
+                    <option value="English" selected>English</option>
+                    <option value="Tamil">தமிழ்</option>
+                </select>
+
+                <button type="submit">
+                    Generate My Story ✨
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <footer>
+        © 2026 CodeTales | Turn Code into Stories. Learn, Predict & Play.
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Story | CodeTales</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f7ff;
+            color: #292344;
+            margin: 0;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        h1 {
+            color: #5635a5;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: #6842c2;
+            margin-bottom: 18px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            background: #f5f2fb;
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .story-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #39334f;
+            overflow-wrap: anywhere;
+        }
+
+        .story-content h1 {
+            color: #5635a5;
+            text-align: left;
+            font-size: 25px;
+            margin: 25px 0 15px;
+        }
+
+        .story-content h2 {
+            color: #6842c2;
+            font-size: 21px;
+            margin-top: 30px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eee8fa;
+        }
+
+        .story-content h3 {
+            color: #5635a5;
+            font-size: 18px;
+            margin-top: 22px;
+        }
+
+        .story-content p {
+            margin: 12px 0;
+        }
+
+        .story-content strong {
+            color: #5635a5;
+        }
+
+        .story-content ul,
+        .story-content ol {
+            padding-left: 25px;
+        }
+
+        .story-content li {
+            margin: 8px 0;
+        }
+
+        .story-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 14px;
+        }
+
+        .story-content th {
+            background: #6842c2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .story-content td {
+            padding: 12px;
+            border: 1px solid #e8e2f3;
+        }
+
+        .story-content tr:nth-child(even) {
+            background: #f8f6fc;
+        }
+
+        .story-content pre {
+            background: #f3f0fa;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .story-content code {
+            background: #f1edfa;
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #6842c2;
+        }
+
+        .story-content blockquote {
+            border-left: 4px solid #9575e8;
+            padding: 10px 18px;
+            margin: 18px 0;
+            background: #f8f6fc;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            align-items: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 13px 22px;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .back {
+            background: #6842c2;
+            color: white;
+        }
+
+        .download {
+            background: #218838;
+            color: white;
+        }
+
+        .quiz {
+            background: #e8ddff;
+            color: #5635a5;
+        }
+
+        .button:hover {
+            opacity: 0.88;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .story-content table {
+                font-size: 12px;
+            }
+
+            .story-content th,
+            .story-content td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📖 Your CodeTale is Ready!</h1>
+
+    <p class="subtitle">
+        Understand your Python program through a creative story.
+    </p>
+
+    <!-- Submitted Python Code -->
+    <div class="card">
+
+        <h2>💻 Your Submitted Code</h2>
+
+        <pre>{{ code }}</pre>
+
+    </div>
+
+    <!-- Generated Story -->
+    <div class="card">
+
+        <h2>✨ Story and Explanation</h2>
+
+        <div class="story-content">
+            {{ story | format_story | safe }}
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="buttons">
+
+        <a href="{{ url_for('new_story') }}" class="button back">
+            ← Generate Another Story
+        </a>
+
+        <!-- Story-Based Quiz -->
+        <form action="{{ url_for('story_quiz') }}" method="POST">
+
+            <input type="hidden" name="code" value="{{ code | e }}">
+            <input type="hidden" name="story" value="{{ story | e }}">
+            <input type="hidden" name="language" value="{{ language | e }}">
+
+            <button type="submit" class="button quiz">
+                🧠 Start Story-Based Quiz
+            </button>
+
+        </form>
+
+        <!-- Download PDF -->
+        <form action="{{ url_for('download_pdf') }}" method="POST">
+
+            <textarea name="code" hidden>{{ code }}</textarea>
+            <textarea name="story" hidden>{{ story }}</textarea>
+
+            <input type="hidden" name="language" value="{{ language | e }}">
+
+            <button type="submit" class="button download">
+                📄 Download PDF
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
